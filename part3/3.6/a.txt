@@ -1,0 +1,27 @@
+Docker is a container solution which enables developers to package their applications 
+and encapsulate the runtime as part of the distribution. 
+
+A common problem when developing software is “it worked on my machine” which means that 
+while developing the application everything worked on the developer’s workstation as she 
+had all the necessary dependencies and their correct versions installed. When deploying 
+the same application to production, however, the runtime may turn out to be incomplete 
+or different which may cause nasty problems and bugs to appear in production. Hence 
+“it worked on my machine”.
+
+Another common problem is application dependencies. For example if an application 
+requires Java 8 another one may require Java 11. With Java it may not be a problem to 
+install both simultaneously but with many other libraries that may not be the case. 
+Often the problem is resolved using separate virtual machines, but it results in 
+overhead.
+
+Docker solves both of these problems and more. In addition to building the 
+application using whatever tools the programming language requires the application is 
+also packaged as a Docker image as part of the build process. When starting the 
+container the complete runtime is downloaded as part of the Docker image. The runtime 
+does not require anything but Docker to be installed. All libraries and other such 
+dependencies are included in the image.
+
+Docker has also changed how Continuous Integration services can be implemented. 
+Instead of using different agents of plugins to support various environments one 
+simply defines the Docker image and commands to use to build the application.
+

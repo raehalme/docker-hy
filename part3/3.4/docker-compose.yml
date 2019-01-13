@@ -1,0 +1,33 @@
+version: "3"
+services:
+  nginx:
+    build: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+  frontend:
+    build: frontend-example-docker
+  backend:
+    build: backend-example-docker
+    restart: always
+    environment:
+      - FRONT_URL=http://localhost
+      - REDIS=redis
+      - REDIS_PORT=6379
+      - DB_HOST=postgres
+      - DB_USERNAME=backend
+      - DB_PASSWORD=secret
+  redis:
+    image: redis
+    restart: always
+    command: --appendonly yes
+    volumes:
+      - ./volumes/redis:/data
+  postgres:
+    image: postgres
+    restart: always
+    volumes:
+      - ./volumes/pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=backend
+      - POSTGRES_PASSWORD=secret

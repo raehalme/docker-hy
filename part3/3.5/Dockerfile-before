@@ -1,0 +1,33 @@
+FROM maven:3.5.4-jdk-8-alpine AS builder
+
+WORKDIR /project
+
+COPY pom.xml .
+
+RUN mvn -s /usr/share/maven/ref/settings-docker.xml dependency:resolve dependency:resolve-plugins
+
+COPY . .
+
+RUN mvn -s /usr/share/maven/ref/settings-docker.xml package
+
+FROM openjdk:8u171-jdk-alpine3.8
+
+RUN set -e \
+        && apk upgrade --no-cache \
+        && apk add --no-cache gettext 
+
+RUN set -e \
+        && addgroup -S -g 1000 app \
+        && adduser -S -u 1000 -h /app -G app app
+
+USER app
+
+WORKDIR /app
+
+ENV JAVA_OPTS="-server -Djava.awt.headless=true -Dsun.net.inetaddr.ttl=0 -XX:+CrashOnOutOfMemoryError -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -XshowSettings:vm"
+
+CMD ./run.sh
+
+COPY --chown=app:app src/main/docker/* ./
+
+COPY --from=builder --chown=app:app /project/target/*.jar .
