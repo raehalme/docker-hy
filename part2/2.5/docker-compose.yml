@@ -1,0 +1,24 @@
+version: "3"
+services:
+  nginx:
+    build: nginx-proxy
+    ports:
+      - "80:80"
+  frontend:
+    build: frontend-example-docker
+  backend:
+    build: backend-example-docker
+    environment:
+      - FRONT_URL=http://localhost
+      - REDIS=redis
+      - REDIS_PORT=6379
+      - DB_HOST=postgres
+      - DB_USERNAME=backend
+      - DB_PASSWORD=secret
+  redis:
+    image: redis
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=backend
+      - POSTGRES_PASSWORD=secret

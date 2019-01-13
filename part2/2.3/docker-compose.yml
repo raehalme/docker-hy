@@ -1,0 +1,27 @@
+version: "3"
+services:
+  frontend:
+    build: frontend-example-docker
+    expose:
+      - "5000"
+    ports:
+      - "5000:5000"
+  backend:
+    build: backend-example-docker
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS=redis
+      - REDIS_PORT=6379
+      - DB_HOST=postgres
+      - DB_USERNAME=backend
+      - DB_PASSWORD=secret
+  redis:
+    image: redis
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=backend
+      - POSTGRES_PASSWORD=secret
